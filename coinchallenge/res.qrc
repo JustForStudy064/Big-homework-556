@@ -22,5 +22,12 @@
         <file>res/PlayLevelSceneBg.png</file>
         <file>res/TapButtonSound.wav</file>
         <file>res/Title.png</file>
+        <file>res/Mute.png</file>
+        <file>res/NoMute.png</file>
+        <file>res/NoMute1.png</file>
+        <file>res/Mute1.png</file>
+        <file>res/RoyalDays.wav</file>
+        <file>res/RoyalDays1.wav</file>
+        <file>res/No More What Ifs.wav</file>
     </qresource>
 </RCC>

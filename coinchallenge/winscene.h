@@ -28,13 +28,15 @@
 
 **************************************************/
 
+class ChooseScene;
+
 class WinScene : public QMainWindow
 {
     Q_OBJECT
 public:
     WinScene(int a,int b,int c,bool d,bool e);
     void paintEvent(QPaintEvent *e);
-    void backtomainscene(QMainWindow *);
+    void backtomainscene(ChooseScene *);
     MyButton *btn_back;
     int timeplay;
     int best;

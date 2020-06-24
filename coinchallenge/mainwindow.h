@@ -5,9 +5,11 @@
 #include<QPainter>
 #include<QDebug>
 #include"mybutton.h"
-#include"choosescene.h"
+
 #include"winscene.h"
 #include"playscene.h"
+#include <QSound>
+#include <QSoundEffect>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -26,6 +28,8 @@ QT_END_NAMESPACE
 
 **************************************************/
 
+class ChooseScene;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,6 +38,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void paintEvent(QPaintEvent *);
+    void playMusic(bool);
+
+
+
+
 
     // 创建选择场景界面
     ChooseScene *choose;
@@ -42,3 +51,5 @@ private:
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
+
+

@@ -34,6 +34,7 @@
 
 **************************************************/
 
+class ChooseScene;
 
 class PlayScene : public QMainWindow
 {
@@ -42,11 +43,12 @@ public:
    // explicit PlayScene(QWidget *parent = nullptr);
    PlayScene(int index);
    void paintEvent(QPaintEvent*);
-   void backtochoose(QMainWindow*);
+   void backtochoose(ChooseScene*);
    void Helpersendtips();
 
    void godhand();
-   void getwindow(QMainWindow *);
+   void getwindow(ChooseScene *);
+   void playMusic(bool);
 
 
    bool ifwin;
@@ -65,7 +67,7 @@ public:
    bool array[4][4];
    QTimer*counter;
    int time;
-   QMainWindow*back;
+   ChooseScene *back;
    void recordscore();
    void getbestrecord();
    int best;

@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include "mybutton.h"
 #include<vector>
-#include "playscene.h"
 #include"winscene.h"
+
 
 using namespace std;
 
@@ -23,13 +23,20 @@ using namespace std;
 
 **************************************************/
 
+class MainWindow;
+
+class PlayScene;
+
+class WinScene;
+
 class ChooseScene : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit ChooseScene(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *);
-    void backtomain(QMainWindow *);
+    void backtomain(MainWindow *);
+    void playMusic(bool);
 
 
     vector<MyButton*>barchoose;    // 创建我的按钮类的数组
@@ -42,3 +49,5 @@ signals:
 };
 
 #endif // CHOOSESCENE_H
+
+
