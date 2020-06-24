@@ -1,6 +1,6 @@
-#ifndef PLAYSCENE_H
+﻿#ifndef PLAYSCENE_H
 #define PLAYSCENE_H
-
+#include<QFile>
 #include<QMainWindow>
 #include<QPainter>
 #include<QMenu>
@@ -19,6 +19,7 @@
 #include"winscene.h"
 #include"mybutton.h"
 #include"sceneconfig.h"
+#include<QPen>
 
 /*************************************************
 类名：PlayScene
@@ -62,6 +63,13 @@ public:
    QVector<path*>helper;
    QVector<path*>answer;
    bool array[4][4];
+   QTimer*counter;
+   int time;
+   QMainWindow*back;
+   void recordscore();
+   void getbestrecord();
+   int best;
+   bool recordempty;
 
 
 signals:

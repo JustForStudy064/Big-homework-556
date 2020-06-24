@@ -1,4 +1,4 @@
-#include "playscene.h"
+﻿#include "playscene.h"
 
 PlayScene::PlayScene(int index)
 {
@@ -10,6 +10,8 @@ PlayScene::PlayScene(int index)
     this->setFixedSize(500,800);//设定固定大小
     this->setWindowTitle(QString("游戏关卡%1").arg(index));//设置标题
     this->setWindowIcon(QIcon(":/res/Coin0001.png"));//设置标题的图标
+    barindex=index;
+    this->getbestrecord();
 
     // 设置菜单栏
     QMenuBar *bar=menuBar();
@@ -26,7 +28,7 @@ PlayScene::PlayScene(int index)
     startmenu->addAction(tipsaction);
     startmenu->addAction(god);
     this->godhand();
-    win = new WinScene();//创建胜利情景
+    win = NULL;
 
     connect(quitaction,&QAction::triggered,[=](){
         this->close();
@@ -46,6 +48,16 @@ PlayScene::PlayScene(int index)
     label->setFont(font);
     label->setGeometry(30, this->height()-50,120,50);
     label->setText(QString("Level:%1").arg(index));
+
+    //初始化玩家所用的时间（为0），启动记录玩家时间的定时器，每隔一秒记录一次
+    time=0;
+    counter=new QTimer(this);
+    counter->start(1000);
+    counter->start(1000);
+    connect(counter,&QTimer::timeout,[=](){
+        ++time;
+        this->update();
+    });
 
 
     answer.push_back(new path(1,1));
@@ -137,8 +149,12 @@ PlayScene::PlayScene(int index)
                QTimer::singleShot(500,this,[=](){
                    if(ifwin)
                {
-                   this->hide();
-                   win->show();
+                       counter->stop();
+                       this->hide();
+                       win=new WinScene(time,best,barindex,time<best?true:false,recordempty);
+                       win->backtomainscene(back);
+                       win->show();
+                       this->recordscore();
                }});
            });
 
@@ -159,6 +175,39 @@ void PlayScene::paintEvent(QPaintEvent *)
     map.load(":/res/PlayLevelSceneBg.png");//加载图片
     painter.drawPixmap(0,0,this->width(),this->height(),map);//绘制图片，并且按照实际情况进行拉伸
     painter.drawPixmap(10,30,title);//绘制标题图片
+    QPen pen;
+    pen.setWidth(3);
+    pen.setColor(Qt::white);
+    QFont font;
+    font.setFamily("华文新魏");
+    font.setPointSize(30);
+    painter.setFont(font);
+    painter.setPen(pen);
+    int minute=time/60;
+    int second=time%60;
+    QString minuteshow;
+    QString secondshow;
+    if(minute<10)
+    {
+        minuteshow=QString("0%1").arg(minute);
+    }
+    else
+    {
+        minuteshow=QString("%1").arg(minute);
+    }
+    if(second<10)
+    {
+        secondshow=QString("0%1").arg(second);
+    }
+    else
+    {
+        secondshow=QString("%1").arg(second);
+
+    }
+
+    QString timeshow=minuteshow+QString(":")+secondshow;
+    painter.drawText(190,200,timeshow);
+
 }
 
 void PlayScene::backtochoose(QMainWindow *a)
@@ -169,7 +218,6 @@ void PlayScene::backtochoose(QMainWindow *a)
             QTimer::singleShot(200,this,[=](){
                 this->hide();
                 a->show();
-
             });
 
         });//点击按钮后返回主窗口
@@ -305,22 +353,70 @@ void PlayScene::godhand()
                 if(ifadd)
                {
                 helper.push_back(new path(i+1,j+1));//把外挂的路径压入向量
-
                }
-
-
             }
 
             QTimer::singleShot(500,this,[=](){
                 if(ifwin)
             {
-               this->hide();
+                counter->stop();
+                this->hide();
+                win=new WinScene(time,best,barindex,time<best?true:false,recordempty);
+                win->backtomainscene(back);
                 win->show();
+                this->recordscore();
             }});
     });
 }
 
 void PlayScene::getwindow(QMainWindow*a)
 {
-    win->backtomainscene(a);
+    back=a;
+}
+void PlayScene::recordscore()
+{
+
+    QString filepath=QString("C://Users//ASUS//Desktop//record.txt");
+    QFile file(filepath);
+    file.open(QIODevice::Append);
+    QString a=QString("%1").arg(time)+QString("\n");
+    QByteArray b=a.toUtf8();
+    file.write(b);
+    file.close();
+}
+void PlayScene::getbestrecord()
+{
+    QByteArray arr;
+    QString filepath=QString("C://Users//ASUS//Desktop//record.txt");
+    QFile file(filepath);
+    file.open(QIODevice::ReadOnly);
+    QVector<int>record;
+    while(!file.atEnd())
+    {
+      bool ok;
+      arr=file.readLine();
+      QString b=QString::fromLocal8Bit(arr);
+      int a=b.toInt(&ok,10);
+      record.push_back(a);
+      qDebug()<<"记录"<<b<<" "<<a;
+    }
+    file.close();
+    if(record.size()!=0)
+    {   int a=record[0];
+        for(int i=1;i<record.size();++i)
+        {
+            if(a>=record[i])
+            {
+                a=record[i];
+            }
+        }
+        best=a;
+        recordempty==false;
+    }
+    else
+    {
+        recordempty=true;
+        best=0;
+        qDebug()<<"无记录";
+    }
 }

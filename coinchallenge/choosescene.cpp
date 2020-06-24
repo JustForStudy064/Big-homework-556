@@ -1,4 +1,4 @@
-#include "choosescene.h"
+﻿#include "choosescene.h"
 #include<QPainter>
 #include<QMenu>
 #include<QMenuBar>
